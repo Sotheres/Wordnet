@@ -40,6 +40,7 @@ public class WordNet {
 
     }
 
+    //TODO Check adding one word multiple times
     public boolean isNoun(String word) {
         validate(word);
 
