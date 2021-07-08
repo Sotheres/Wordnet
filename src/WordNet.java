@@ -7,7 +7,7 @@ public class WordNet {
     HashSet<String> wordSet;
 
     public WordNet(String synsets, String hypernyms) {
-        validate(synsets, hypernyms);
+        validateNull(synsets, hypernyms);
 
         int size = 0;
         In in = new In(synsets);
@@ -42,30 +42,32 @@ public class WordNet {
 
     //TODO Check adding one word multiple times
     public boolean isNoun(String word) {
-        validate(word);
+        validateNull(word);
 
         return wordSet.contains(word);
     }
 
     public int distance(String nounA, String nounB) {
-        validate(nounA, nounB);
-        if (!isNoun(nounA) || !isNoun(nounB)) {
-            throw new IllegalArgumentException("Not a WordNet noun");
-        }
+        validateNull(nounA, nounB);
+        validateWordNet(nounA, nounB);
 
 
     }
 
     public String sap(String nounA, String nounB) {
-        validate(nounA, nounB);
-        if (!isNoun(nounA) || !isNoun(nounB)) {
-            throw new IllegalArgumentException("Not a WordNet noun");
-        }
+        validateNull(nounA, nounB);
+        validateWordNet(nounA, nounB);
 
 
     }
 
-    private void validate(String... args) {
+    private void validateWordNet(String nounA, String nounB) {
+        if (!isNoun(nounA) || !isNoun(nounB)) {
+            throw new IllegalArgumentException("Not a WordNet noun");
+        }
+    }
+
+    private void validateNull(String... args) {
         for (String arg : args) {
             if (arg == null) {
                 throw new IllegalArgumentException("Argument is null");
