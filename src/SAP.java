@@ -24,25 +24,25 @@ public class SAP {
         }
     }
 
-    public int ancestor(int v, int w) {
-        validateVertex(v, w);
+//    public int ancestor(int v, int w) {
+//        validateVertex(v, w);
+//
+//
+//    }
+//
+//    public int length(Iterable<Integer> v, Iterable<Integer> w) {
+//        validateContainer(v, w);
+//
+//
+//    }
+//
+//    public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
+//        validateContainer(v, w);
+//
+//
+//    }
 
-
-    }
-
-    public int length(Iterable<Integer> v, Iterable<Integer> w) {
-        validate(v, w);
-
-
-    }
-
-    public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-        validate(v, w);
-
-
-    }
-
-    private void validate(Iterable<Integer> a, Iterable<Integer> b) {
+    private void validateContainer(Iterable<Integer> a, Iterable<Integer> b) {
         if (a == null || b == null) {
             throw new IllegalArgumentException("Argument is null");
         }

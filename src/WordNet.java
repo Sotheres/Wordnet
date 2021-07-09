@@ -3,16 +3,22 @@ import edu.princeton.cs.algs4.In;
 import java.util.HashSet;
 
 public class WordNet {
-    Digraph wordnet;
-    HashSet<String> wordSet;
+    private Digraph wordnet;
+    private HashSet<String> wordSet; // HashMap?
+    private int numberOfVertices;
 
     public WordNet(String synsets, String hypernyms) {
         validateNull(synsets, hypernyms);
 
-        int size = 0;
+        constructSynetsSet(synsets);
+        constructWordNetDigraph(hypernyms);
+    }
+
+    private void constructSynetsSet(String synsets) {
         In in = new In(synsets);
         String[] line;
         String[] synet;
+        wordSet = new HashSet<>();
 
         while (!in.isEmpty()) {
             line = in.readLine().split(",");
@@ -20,12 +26,15 @@ public class WordNet {
             for (String s : synet) {
                 wordSet.add(s);
             }
-            size++;
+            numberOfVertices++;
         }
+    }
 
-        wordnet = new Digraph(size);
-        in = new In(hypernyms);
+    private void constructWordNetDigraph(String hypernyms) {
+        wordnet = new Digraph(numberOfVertices);
+        In in = new In(hypernyms);
         int id;
+        String[] line;
 
         while(!in.isEmpty()) {
              line = in.readLine().split(",");
@@ -36,9 +45,9 @@ public class WordNet {
         }
     }
 
-    public Iterable<String> nouns() {
-
-    }
+//    public Iterable<String> nouns() {
+//
+//    }
 
     //TODO Check adding one word multiple times
     public boolean isNoun(String word) {
@@ -47,19 +56,19 @@ public class WordNet {
         return wordSet.contains(word);
     }
 
-    public int distance(String nounA, String nounB) {
-        validateNull(nounA, nounB);
-        validateWordNet(nounA, nounB);
+//    public int distance(String nounA, String nounB) {
+//        validateNull(nounA, nounB);
+//        validateWordNet(nounA, nounB);
+//
+//
+//    }
 
-
-    }
-
-    public String sap(String nounA, String nounB) {
-        validateNull(nounA, nounB);
-        validateWordNet(nounA, nounB);
-
-
-    }
+//    public String sap(String nounA, String nounB) {
+//        validateNull(nounA, nounB);
+//        validateWordNet(nounA, nounB);
+//
+//
+//    }
 
     private void validateWordNet(String nounA, String nounB) {
         if (!isNoun(nounA) || !isNoun(nounB)) {
@@ -76,6 +85,12 @@ public class WordNet {
     }
 
     public static void main(String[] args) {
-
+        WordNet wn = new WordNet("synsets6.txt", "hypernyms6InvalidCycle.txt");
+        System.out.println("Set size: " + wn.wordSet.size() + "\nSet contains: ");
+        for (String s : wn.wordSet) {
+            System.out.println(s);
+        }
+        System.out.println("Digraph: ");
+        System.out.println(wn.wordnet);
     }
 }
