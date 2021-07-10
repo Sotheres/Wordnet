@@ -1,10 +1,12 @@
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
-import java.util.HashSet;
 
+import java.util.HashMap;
+import java.util.HashSet;
+// TODO: check corner cases
 public class WordNet {
     private Digraph wordnet;
-    private HashSet<String> wordSet; // HashMap?
+    private HashMap<Integer, String> wordMap;
     private int numberOfVertices;
 
     public WordNet(String synsets, String hypernyms) {
@@ -16,17 +18,14 @@ public class WordNet {
 
     private void constructSynetsSet(String synsets) {
         In in = new In(synsets);
-        String[] line;
-        String[] synet;
-        wordSet = new HashSet<>();
+        wordMap = new HashMap<>();
 
         while (!in.isEmpty()) {
-            line = in.readLine().split(",");
-            synet = line[1].split(" ");
+            String[] line = in.readLine().split(",");
+            String[] synet = line[1].split(" ");
             for (String s : synet) {
-                wordSet.add(s);
+                wordMap.put(numberOfVertices++, s);
             }
-            numberOfVertices++;
         }
     }
 
@@ -49,11 +48,11 @@ public class WordNet {
 //
 //    }
 
-    //TODO Check adding one word multiple times
+    //TODO: Rewrite the method and check adding one word multiple times
     public boolean isNoun(String word) {
         validateNull(word);
 
-        return wordSet.contains(word);
+        return wordMap.containsValue(word);
     }
 
 //    public int distance(String nounA, String nounB) {
@@ -85,12 +84,6 @@ public class WordNet {
     }
 
     public static void main(String[] args) {
-        WordNet wn = new WordNet("synsets6.txt", "hypernyms6InvalidCycle.txt");
-        System.out.println("Set size: " + wn.wordSet.size() + "\nSet contains: ");
-        for (String s : wn.wordSet) {
-            System.out.println(s);
-        }
-        System.out.println("Digraph: ");
-        System.out.println(wn.wordnet);
+
     }
 }
