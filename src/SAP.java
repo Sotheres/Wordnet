@@ -3,17 +3,15 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdIn;
 
-import java.util.LinkedList;
-
 public class SAP {
-    private Digraph digraph;
+
+    private final Digraph digraph;
     private int ancestor;
 
     public SAP(Digraph G) {
         if (G == null) {
             throw new IllegalArgumentException("Constructor argument is null");
         }
-
         digraph = new Digraph(G);
     }
 
