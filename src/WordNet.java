@@ -3,8 +3,6 @@ import edu.princeton.cs.algs4.In;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
-
 
 public class WordNet {
 
@@ -45,7 +43,7 @@ public class WordNet {
         wordnet = new Digraph(numberOfVertices);
         In in = new In(hypernyms);
 
-        while(!in.isEmpty()) {
+        while (!in.isEmpty()) {
              String[] line = in.readLine().split(",");
              int id = Integer.parseInt(line[0]);
              for (int i = 1; i < line.length; i++) {

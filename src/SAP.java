@@ -7,6 +7,9 @@ public class SAP {
 
     private final Digraph digraph;
     private int ancestor;
+    private int vSize;
+    private int wSize;
+
 
     public SAP(Digraph G) {
         if (G == null) {
@@ -34,6 +37,15 @@ public class SAP {
         return shortest != Integer.MAX_VALUE ? shortest : -1;
     }
 
+    private void validateVertex(int... a) {
+        int v = digraph.V();
+        for (int i : a) {
+            if (i < 0 || i >= v) {
+                throw new IllegalArgumentException("Illegal vertex value");
+            }
+        }
+    }
+
     public int ancestor(int v, int w) {
         validateVertex(v, w);
         length(v, w);
@@ -41,7 +53,10 @@ public class SAP {
     }
 
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
-        validateContainer(v, w);
+        validateNullContainer(v, w);
+        if (validateZeroLengthArg()) {
+            return  -1;
+        }
 
         BreadthFirstDirectedPaths pathFromV = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths pathFromW = new BreadthFirstDirectedPaths(digraph, w);
@@ -59,37 +74,36 @@ public class SAP {
         return shortest != Integer.MAX_VALUE ? shortest : -1;
     }
 
-    public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-        validateContainer(v, w);
-        length(v, w);
-        return ancestor;
-    }
-
-    private void validateContainer(Iterable<Integer> a, Iterable<Integer> b) {
-        if (a == null || b == null) {
+    private void validateNullContainer(Iterable<Integer> v, Iterable<Integer> w) {
+        if (v == null || w == null) {
             throw new IllegalArgumentException("Argument is null");
         }
-        for (Integer i : a) {
+        vSize = 0;
+        for (Integer i : v) {
             if (i == null) {
                 throw new IllegalArgumentException("Null item in the container");
             }
+            vSize++;
             validateVertex(i);
         }
-        for (Integer i : b) {
+        wSize = 0;
+        for (Integer i : w) {
             if (i == null) {
                 throw new IllegalArgumentException("Null item in the container");
             }
+            wSize++;
             validateVertex(i);
         }
     }
 
-    private void validateVertex(int... a) {
-        int v = digraph.V();
-        for (int i : a) {
-            if (i < 0 || i >= v) {
-                throw new IllegalArgumentException("Illegal vertex value");
-            }
-        }
+    private boolean validateZeroLengthArg() {
+        return vSize == 0 || wSize == 0;
+    }
+
+    public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
+        validateNullContainer(v, w);
+        length(v, w);
+        return ancestor;
     }
 
     public static void main(String[] args) {
