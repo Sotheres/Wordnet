@@ -3,12 +3,12 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Topological;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public class WordNet {
 
     private Digraph wordnet;
     private HashMap<String, LinkedList<Integer>> wordMap;
+    private HashMap<Integer, String> synetsMap;
     private int numberOfVertices;
     private final SAP sap;
     private boolean root;
@@ -30,9 +30,11 @@ public class WordNet {
     private void constructSynetsSet(String synsets) {
         In in = new In(synsets);
         wordMap = new HashMap<>();
+        synetsMap = new HashMap<>();
 
         while (!in.isEmpty()) {
             String[] line = in.readLine().split(",");
+            synetsMap.put(numberOfVertices, line[1]);
             String[] synet = line[1].split(" ");
             for (String s : synet) {
                 if (wordMap.containsKey(s)) {
@@ -50,20 +52,19 @@ public class WordNet {
     private void constructWordNetDigraph(String hypernyms) {
         wordnet = new Digraph(numberOfVertices);
         In in = new In(hypernyms);
-        int rootsCount = 0;
+        int entryCount = 0;
 
         while (!in.isEmpty()) {
-             String[] line = in.readLine().split(",");
-             if (line.length == 1) {
-                 rootsCount++;
-                 continue;
-             }
-             int id = Integer.parseInt(line[0]);
-             for (int i = 1; i < line.length; i++) {
+            String[] line = in.readLine().split(",");
+            if (line.length > 1) {
+                entryCount++;
+            }
+            int id = Integer.parseInt(line[0]);
+            for (int i = 1; i < line.length; i++) {
                  wordnet.addEdge(id, Integer.parseInt(line[i]));
-             }
+            }
         }
-        if (rootsCount == 1) {
+        if (entryCount == synetsMap.size() - 1) {
             root = true;
         }
     }
@@ -95,15 +96,8 @@ public class WordNet {
         Iterable<Integer> v = wordMap.get(nounA);
         Iterable<Integer> w = wordMap.get(nounB);
         int ancestor = sap.ancestor(v, w);
-        StringBuilder ancestorSynset = new StringBuilder();
 
-        for (Map.Entry<String, LinkedList<Integer>> entry : wordMap.entrySet()) {
-            if (entry.getValue().contains(ancestor)) {
-                ancestorSynset.append(entry.getKey()).append(" ");
-            }
-        }
-
-        return ancestorSynset.toString();
+        return synetsMap.get(ancestor);
     }
 
     private void validateWordNet(String nounA, String nounB) {
@@ -121,7 +115,7 @@ public class WordNet {
     }
 
     public static void main(String[] args) {
-        WordNet wn = new WordNet("synsets.txt", "hypernyms.txt");
+        WordNet wn = new WordNet("synsets6.txt", "hypernyms6InvalidTwoRoots.txt");
         System.out.println(wn.sap("entity", "edible_fruit"));
         System.out.println(wn.distance("entity", "edible_fruit"));
     }
