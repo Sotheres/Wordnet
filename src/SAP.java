@@ -47,13 +47,13 @@ public class SAP {
     }
 
     public int ancestor(int v, int w) {
-        validateVertex(v, w);
         length(v, w);
         return ancestor;
     }
 
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
         validateNullContainer(v, w);
+        ancestor = -1;
         if (validateZeroLengthArg()) {
             return  -1;
         }
@@ -61,7 +61,6 @@ public class SAP {
         BreadthFirstDirectedPaths pathFromV = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths pathFromW = new BreadthFirstDirectedPaths(digraph, w);
         int shortest = Integer.MAX_VALUE;
-        ancestor = -1;
 
         for (int i = 0; i < digraph.V(); i++) {
             if (pathFromV.hasPathTo(i) && pathFromW.hasPathTo(i)
@@ -101,7 +100,6 @@ public class SAP {
     }
 
     public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-        validateNullContainer(v, w);
         length(v, w);
         return ancestor;
     }

@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Topological;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -10,12 +11,19 @@ public class WordNet {
     private HashMap<String, LinkedList<Integer>> wordMap;
     private int numberOfVertices;
     private final SAP sap;
-    // TODO: check for rooted DAG
+    private boolean root;
+
     public WordNet(String synsets, String hypernyms) {
         validateNull(synsets, hypernyms);
 
         constructSynetsSet(synsets);
         constructWordNetDigraph(hypernyms);
+
+        Topological tp = new Topological(wordnet);
+        if (!root && !tp.hasOrder()) {
+            throw new IllegalArgumentException("Not a rooted DAG");
+        }
+
         sap = new SAP(wordnet);
     }
 
@@ -42,13 +50,21 @@ public class WordNet {
     private void constructWordNetDigraph(String hypernyms) {
         wordnet = new Digraph(numberOfVertices);
         In in = new In(hypernyms);
+        int rootsCount = 0;
 
         while (!in.isEmpty()) {
              String[] line = in.readLine().split(",");
+             if (line.length == 1) {
+                 rootsCount++;
+                 continue;
+             }
              int id = Integer.parseInt(line[0]);
              for (int i = 1; i < line.length; i++) {
                  wordnet.addEdge(id, Integer.parseInt(line[i]));
              }
+        }
+        if (rootsCount == 1) {
+            root = true;
         }
     }
 
@@ -72,7 +88,6 @@ public class WordNet {
         return sap.length(v, w);
     }
 
-    //TODO: rewrite
     public String sap(String nounA, String nounB) {
         validateNull(nounA, nounB);
         validateWordNet(nounA, nounB);
