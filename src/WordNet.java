@@ -20,7 +20,7 @@ public class WordNet {
         constructWordNetDigraph(hypernyms);
 
         Topological tp = new Topological(wordnet);
-        if (!root && !tp.hasOrder()) {
+        if (!root || !tp.hasOrder()) {
             throw new IllegalArgumentException("Not a rooted DAG");
         }
 
@@ -116,7 +116,5 @@ public class WordNet {
 
     public static void main(String[] args) {
         WordNet wn = new WordNet("synsets6.txt", "hypernyms6InvalidTwoRoots.txt");
-        System.out.println(wn.sap("entity", "edible_fruit"));
-        System.out.println(wn.distance("entity", "edible_fruit"));
     }
 }
